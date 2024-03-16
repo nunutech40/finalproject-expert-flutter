@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../common/utils.dart';
 import '../../domain/entities/movie.dart';
 import '../../domain/usecases/search_movies.dart';
 
@@ -15,14 +16,17 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(SearchLoading());
       final result = await _searchMovies.execute(query);
 
-      result.fold((failure) {
-        emit(
-          SearchError(failure.message),
-        );
-      }, (data) {
-        emit(SearchHasData(data));
-      });
-    });
+      result.fold(
+        (failure) {
+          emit(
+            SearchError(failure.message),
+          );
+        },
+        (data) {
+          emit(SearchHasData(data));
+        },
+      );
+    }, transformer: debounce(const Duration(microseconds: 400)));
   }
 
   final SearchMovies _searchMovies;
