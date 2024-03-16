@@ -53,7 +53,7 @@ void main() {
         return searchBloc;
       },
       act: (bloc) => bloc.add(OnQueryChanged(tQuery)),
-      wait: const Duration(milliseconds: 1500), // ini kusus untuk debounce
+      wait: const Duration(milliseconds: 500), // ini kusus untuk debounce
       expect: () => [
         SearchLoading(),
         SearchHasData(tMovieList),
@@ -63,14 +63,14 @@ void main() {
       },
     );
     blocTest<SearchBloc, SearchState>(
-      'should emit [Loading, Error], when get search is successfull',
+      'should emit [Loading, Error], when get search is unsuccessfull',
       build: () {
         when(mockSearchMovies.execute(tQuery))
             .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
         return searchBloc;
       },
       act: (bloc) => bloc.add(OnQueryChanged(tQuery)),
-      wait: Duration(milliseconds: 1500), // ini kusus untuk debounce
+      wait: Duration(milliseconds: 500), // ini kusus untuk debounce
       expect: () => [
         SearchLoading(),
         SearchError('Server Failure'),

@@ -11,7 +11,6 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("cek run searchpage: $ROUTE_NAME");
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
