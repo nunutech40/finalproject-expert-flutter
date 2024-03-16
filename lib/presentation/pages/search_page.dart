@@ -1,17 +1,17 @@
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/bloc/search_bloc.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
 import 'package:ditonton/presentation/widgets/movie_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+
+import '../bloc/search/search_bloc.dart';
 
 class SearchPage extends StatelessWidget {
   static const ROUTE_NAME = '/search';
 
   @override
   Widget build(BuildContext context) {
+    print("cek run searchpage: $ROUTE_NAME");
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
@@ -22,8 +22,7 @@ class SearchPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              onSubmitted: (query) {
-                // here emit event
+              onChanged: (query) {
                 context.read<SearchBloc>().add(OnQueryChanged(query));
               },
               decoration: InputDecoration(
