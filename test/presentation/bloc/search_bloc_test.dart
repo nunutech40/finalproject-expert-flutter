@@ -53,7 +53,7 @@ void main() {
         return searchBloc;
       },
       act: (bloc) => bloc.add(OnQueryChanged(tQuery)),
-      wait: const Duration(milliseconds: 100),
+      wait: const Duration(milliseconds: 100), // ini kusus untuk debounce
       expect: () => [
         SearchLoading(),
         SearchHasData(tMovieList),
@@ -70,7 +70,7 @@ void main() {
         return searchBloc;
       },
       act: (bloc) => bloc.add(OnQueryChanged(tQuery)),
-      wait: Duration(microseconds: 100),
+      wait: Duration(microseconds: 100), // ini kusus untuk debounce
       expect: () => [
         SearchLoading(),
         SearchError('Server Failure'),
