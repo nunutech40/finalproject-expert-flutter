@@ -1,7 +1,7 @@
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/now_playing_movies_notifier.dart';
+import 'package:ditonton/presentation/bloc/now_playing_movie/now_playing_movie_bloc.dart';
 import 'package:ditonton/presentation/widgets/movie_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class NowPlayingPage extends StatefulWidget {
@@ -15,9 +15,7 @@ class _NowPlayingPage extends State<NowPlayingPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<NowPlayingMoviesNotifier>(context, listen: false)
-            .fetchPopularMovies());
+    context.read<NowPlayingMovieBloc>().add(NowPlayingDidLoadData());
   }
 
   @override
@@ -28,24 +26,29 @@ class _NowPlayingPage extends State<NowPlayingPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<NowPlayingMoviesNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<NowPlayingMovieBloc, NowPlayingMovieState>(
+          builder: (context, state) {
+            if (state is NowPlayingMovieLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            } else if (state is NowPlayingMovieHasData) {
+              final movies = state.result;
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final movie = data.movies[index];
-                  return MovieCard(movie, false);
+                  return MovieCard(movies[index], false);
                 },
-                itemCount: data.movies.length,
+                itemCount: movies.length,
+              );
+            } else if (state is NowPlayingMovieError) {
+              return Center(
+                key: Key('error_message'),
+                child: Text(state.message),
               );
             } else {
               return Center(
                 key: Key('error_message'),
-                child: Text(data.message),
+                child: Text("I'm Sory to hear that, that the app is error"),
               );
             }
           },
