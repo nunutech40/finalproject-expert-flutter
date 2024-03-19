@@ -7,7 +7,9 @@ import 'package:mockito/annotations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'popular_movies_test.mocks.dart';
+
+import 'popular_movies_bloc_test.mocks.dart';
+
 
 @GenerateMocks([GetPopularMovies])
 void main() {
@@ -55,7 +57,6 @@ void main() {
             .thenAnswer((_) async => Right(tMovieList));
         return popularMoviesBloc;
       },
-      
       act: (bloc) => bloc.add(PopularMoviesDidLoad()),
       expect: () => [
         PopularMoviesLoading(),

@@ -15,7 +15,7 @@ class TopRatedMoviesBloc
       final result = await _getTopRatedMovies.execute();
       result.fold(
         (failure) {
-          emit(TopRatedMoviesError('Sever Failure'));
+          emit(TopRatedMoviesError('Server Failure'));
         },
         (data) {
           emit(TopRatedMoviesHasData(data));
