@@ -23,6 +23,7 @@ import 'package:ditonton/domain/usecases/save_watchlist.dart';
 import 'package:ditonton/domain/usecases/search_movies.dart';
 import 'package:ditonton/domain/usecases/search_tv_series.dart';
 import 'package:ditonton/presentation/bloc/now_playing_movie/now_playing_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/ontheair_tv_series/ontheair_tv_series_bloc.dart';
 import 'package:ditonton/presentation/bloc/popular_movies/popular_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/search_tv_series/search_tv_series_bloc.dart';
 import 'package:ditonton/presentation/bloc/top_rated_movies/top_rated_movies_bloc.dart';
@@ -121,6 +122,12 @@ void init() {
 
   locator.registerFactory(
     () => TVSeriesOnTheAirNotifier(
+      locator(),
+    ),
+  );
+
+  locator.registerFactory(
+    () => OntheairTvSeriesBloc(
       locator(),
     ),
   );
