@@ -1,7 +1,7 @@
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/top_rated_tv_series_notifier.dart';
+import 'package:ditonton/presentation/bloc/top_rated_tv_series/top_rated_tv_series_bloc.dart';
 import 'package:ditonton/presentation/widgets/movie_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class TopRatedTVSeriesPage extends StatefulWidget {
@@ -15,9 +15,7 @@ class _TopRatedTVSeriesPageState extends State<TopRatedTVSeriesPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<TopRatedTvSeriesNotifier>(context, listen: false)
-            .fetchTopRatedTvSeries());
+    context.read<TopRatedTvSeriesBloc>().add(TopRatedTvSeriesDidLoad());
   }
 
   @override
@@ -28,24 +26,29 @@ class _TopRatedTVSeriesPageState extends State<TopRatedTVSeriesPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<TopRatedTvSeriesNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<TopRatedTvSeriesBloc, TopRatedTvSeriesState>(
+          builder: (context, state) {
+            if (state is TopRatedTvSeriesLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            } else if (state is TopRatedTvSeriesHasData) {
+              final movies = state.result;
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final movie = data.movies[index];
-                  return MovieCard(movie, false);
+                  return MovieCard(movies[index], false);
                 },
-                itemCount: data.movies.length,
+                itemCount: movies.length,
+              );
+            } else if (state is TopRatedTvSeriesError) {
+              return Center(
+                key: Key('error_message_server'),
+                child: Text(state.message),
               );
             } else {
               return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
+                key: Key('error_message_default'),
+                child: Text("I'm Sory to hear that, that the app is error"),
               );
             }
           },
