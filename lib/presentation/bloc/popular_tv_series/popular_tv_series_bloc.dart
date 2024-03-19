@@ -14,7 +14,7 @@ class PopularTvSeriesBloc
       : super(PopularTvSeriesEmpty()) {
     on<PopularTvSeriesDidLoad>(
       (event, emit) async {
-        emit(PopularTvSeriesEmpty());
+        emit(PopularTvSeriesLoading());
 
         final result = await _getPopularTVSeries.execute();
 
