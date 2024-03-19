@@ -4,7 +4,6 @@ import 'package:ditonton/common/failure.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/usecases/get_now_playing_movies.dart';
 import 'package:ditonton/presentation/bloc/now_playing_movie/now_playing_movie_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -41,7 +40,7 @@ void main() {
   final tMovieList = <Movie>[tMovie];
 
   group('Group Testing Unit for Now Playing Movie Bloc', () {
-    test('description', () {
+    test('Initial state should be empty', () {
       expect(nowPlayingMovieBloc.state, NowPlayingMovieEmpty());
     });
 
