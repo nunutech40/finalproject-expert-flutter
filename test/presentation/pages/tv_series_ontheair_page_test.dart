@@ -1,8 +1,11 @@
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/movie.dart';
+import 'package:ditonton/presentation/bloc/ontheair_tv_series/ontheair_tv_series_bloc.dart';
+import 'package:ditonton/presentation/bloc/top_rated_tv_series/top_rated_tv_series_bloc.dart';
 import 'package:ditonton/presentation/pages/ontheair_tv_series_page.dart';
 import 'package:ditonton/presentation/provider/tv_series_onththeair.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -10,17 +13,17 @@ import 'package:provider/provider.dart';
 
 import 'tv_series_ontheair_page_test.mocks.dart';
 
-@GenerateMocks([TVSeriesOnTheAirNotifier])
+@GenerateMocks([OntheairTvSeriesBloc])
 void main() {
-  late MockTVSeriesOnTheAirNotifier mockNotifier;
+  late MockOntheairTvSeriesBloc mockOntheairTvSeriesBloc;
 
   setUp(() {
-    mockNotifier = MockTVSeriesOnTheAirNotifier();
+    mockOntheairTvSeriesBloc = MockOntheairTvSeriesBloc();
   });
 
   Widget _makeTestableWidget(Widget body) {
-    return ChangeNotifierProvider<TVSeriesOnTheAirNotifier>.value(
-      value: mockNotifier,
+    return BlocProvider<OntheairTvSeriesBloc>.value(
+      value: mockOntheairTvSeriesBloc,
       child: MaterialApp(
         home: body,
       ),
@@ -28,23 +31,35 @@ void main() {
   }
 
   group('Unit test for tv series on thea air list page testing...', () {
-    testWidgets('Page should display center progress bar when loading',
+    testWidgets('Page should display progress bar when loading',
         (WidgetTester tester) async {
-      when(mockNotifier.state).thenReturn(RequestState.Loading);
+      when(mockOntheairTvSeriesBloc.state).thenReturn(
+        OntheairTvSeriesLoading(),
+      );
 
-      final progressBarFinder = find.byType(CircularProgressIndicator);
+      // Mock the stream of states the Bloc will emit
+      when(mockOntheairTvSeriesBloc.stream).thenAnswer(
+        (_) => Stream.value(OntheairTvSeriesLoading()),
+      );
+
+      final progressFinder = find.byType(CircularProgressIndicator);
       final centerFinder = find.byType(Center);
 
       await tester.pumpWidget(_makeTestableWidget(OnTheAirTVSeriesPage()));
 
       expect(centerFinder, findsOneWidget);
-      expect(progressBarFinder, findsOneWidget);
+      expect(progressFinder, findsOneWidget);
     });
 
     testWidgets('Page should display ListView when data is loaded',
         (WidgetTester tester) async {
-      when(mockNotifier.state).thenReturn(RequestState.Loaded);
-      when(mockNotifier.movies).thenReturn(<Movie>[]);
+      when(mockOntheairTvSeriesBloc.state)
+          .thenReturn(OntheairTvSeriesHasData(<Movie>[]));
+
+      // Mock the stream of states the Bloc will emit
+      when(mockOntheairTvSeriesBloc.stream).thenAnswer(
+        (_) => Stream.value(OntheairTvSeriesLoading()),
+      );
 
       final listViewFinder = find.byType(ListView);
 
@@ -55,10 +70,15 @@ void main() {
 
     testWidgets('Page should display text with message when Error',
         (WidgetTester tester) async {
-      when(mockNotifier.state).thenReturn(RequestState.Error);
-      when(mockNotifier.message).thenReturn('Error message');
+      when(mockOntheairTvSeriesBloc.state)
+          .thenReturn(OntheairTvSeriesError('Error message'));
 
-      final textFinder = find.byKey(Key('error_message'));
+      // Mock the stream of states the Bloc will emit
+      when(mockOntheairTvSeriesBloc.stream).thenAnswer(
+        (_) => Stream.value(OntheairTvSeriesLoading()),
+      );
+
+      final textFinder = find.byKey(Key('error_message_server'));
 
       await tester.pumpWidget(_makeTestableWidget(OnTheAirTVSeriesPage()));
 

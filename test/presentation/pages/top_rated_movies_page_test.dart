@@ -1,14 +1,12 @@
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/presentation/bloc/top_rated_movies/top_rated_movies_bloc.dart';
 import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
-import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 
 import 'top_rated_movies_page_test.mocks.dart';
 
@@ -33,55 +31,55 @@ void main() {
     testWidgets('Page should display progress bar when loading',
         (WidgetTester tester) async {
       when(mockTopRatedMoviesBloc.state).thenReturn(
-          TopRatedMoviesLoading(),
-        );
+        TopRatedMoviesLoading(),
+      );
 
-        // Mock the stream of states the Bloc will emit
-        when(mockTopRatedMoviesBloc.stream).thenAnswer(
-          (_) => Stream.value(TopRatedMoviesLoading()),
-        );
+      // Mock the stream of states the Bloc will emit
+      when(mockTopRatedMoviesBloc.stream).thenAnswer(
+        (_) => Stream.value(TopRatedMoviesLoading()),
+      );
 
-        final progressFinder = find.byType(CircularProgressIndicator);
-        final centerFinder = find.byType(Center);
+      final progressFinder = find.byType(CircularProgressIndicator);
+      final centerFinder = find.byType(Center);
 
-        await tester.pumpWidget(_makeTestableWidget(TopRatedMoviesPage()));
+      await tester.pumpWidget(_makeTestableWidget(TopRatedMoviesPage()));
 
-        expect(centerFinder, findsOneWidget);
-        expect(progressFinder, findsOneWidget);
+      expect(centerFinder, findsOneWidget);
+      expect(progressFinder, findsOneWidget);
     });
 
     testWidgets('Page should display when data is loaded',
         (WidgetTester tester) async {
       when(mockTopRatedMoviesBloc.state)
-            .thenReturn(TopRatedMoviesHasData(<Movie>[]));
+          .thenReturn(TopRatedMoviesHasData(<Movie>[]));
 
-        // Mock the stream of states the Bloc will emit
-        when(mockTopRatedMoviesBloc.stream).thenAnswer(
-          (_) => Stream.value(TopRatedMoviesLoading()),
-        );
+      // Mock the stream of states the Bloc will emit
+      when(mockTopRatedMoviesBloc.stream).thenAnswer(
+        (_) => Stream.value(TopRatedMoviesLoading()),
+      );
 
-        final listViewFinder = find.byType(ListView);
+      final listViewFinder = find.byType(ListView);
 
-        await tester.pumpWidget(_makeTestableWidget(TopRatedMoviesPage()));
+      await tester.pumpWidget(_makeTestableWidget(TopRatedMoviesPage()));
 
-        expect(listViewFinder, findsOneWidget);
+      expect(listViewFinder, findsOneWidget);
     });
 
     testWidgets('Page should display text with message when Error',
         (WidgetTester tester) async {
-       when(mockTopRatedMoviesBloc.state)
-            .thenReturn(TopRatedMoviesError('Error message'));
+      when(mockTopRatedMoviesBloc.state)
+          .thenReturn(TopRatedMoviesError('Error message'));
 
-        // Mock the stream of states the Bloc will emit
-        when(mockTopRatedMoviesBloc.stream).thenAnswer(
-          (_) => Stream.value(TopRatedMoviesLoading()),
-        );
+      // Mock the stream of states the Bloc will emit
+      when(mockTopRatedMoviesBloc.stream).thenAnswer(
+        (_) => Stream.value(TopRatedMoviesLoading()),
+      );
 
-        final textFinder = find.byKey(Key('error_message_server'));
+      final textFinder = find.byKey(Key('error_message_server'));
 
-        await tester.pumpWidget(_makeTestableWidget(TopRatedMoviesPage()));
+      await tester.pumpWidget(_makeTestableWidget(TopRatedMoviesPage()));
 
-        expect(textFinder, findsOneWidget);
+      expect(textFinder, findsOneWidget);
     });
   });
 }
