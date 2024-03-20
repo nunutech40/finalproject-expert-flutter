@@ -42,12 +42,12 @@ class _TopRatedMoviesPageState extends State<TopRatedMoviesPage> {
               );
             } else if (state is TopRatedMoviesError) {
               return Center(
-                key: Key('error_message'),
+                key: Key('error_message_server'),
                 child: Text(state.message),
               );
             } else {
               return Center(
-                key: Key('error_message'),
+                key: Key('error_message_default'),
                 child: Text("I'm Sory to hear that, that the app is error"),
               );
             }
