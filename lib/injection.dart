@@ -31,13 +31,8 @@ import 'package:ditonton/presentation/bloc/top_rated_movies/top_rated_movies_blo
 import 'package:ditonton/presentation/bloc/top_rated_tv_series/top_rated_tv_series_bloc.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
-import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/popular_tv_series_notifier.dart';
-import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/top_rated_tv_series_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_series_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_series_list_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_series_onththeair.dart';
 import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
@@ -78,11 +73,6 @@ void init() {
     ),
   );
 
-  locator.registerFactory(
-    () => PopularMoviesNotifier(
-      locator(),
-    ),
-  );
 
   locator.registerFactory(
     () => NowPlayingMovieBloc(
@@ -96,11 +86,6 @@ void init() {
     ),
   );
 
-  locator.registerFactory(
-    () => TopRatedMoviesNotifier(
-      getTopRatedMovies: locator(),
-    ),
-  );
 
   locator.registerFactory(
     () => WatchlistMovieNotifier(
@@ -116,19 +101,9 @@ void init() {
     ),
   );
 
-  locator.registerFactory(
-    () => PopularTvSeriesNotifier(
-      locator(),
-    ),
-  );
 
   locator.registerFactory(
     () => PopularTvSeriesBloc(
-      locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => TVSeriesOnTheAirNotifier(
       locator(),
     ),
   );
@@ -136,12 +111,6 @@ void init() {
   locator.registerFactory(
     () => OntheairTvSeriesBloc(
       locator(),
-    ),
-  );
-
-  locator.registerFactory(
-    () => TopRatedTvSeriesNotifier(
-      getTopRatedTVSeries: locator(),
     ),
   );
 
